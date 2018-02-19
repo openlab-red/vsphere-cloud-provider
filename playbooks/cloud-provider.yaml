@@ -1,0 +1,60 @@
+- hosts: masters
+  tags:
+   - postinstall
+   - cloud-provider
+   - masters
+
+  tasks:
+
+  - block:
+
+    - name: Set apiServerArguments.cloud-config to master config
+      modify_yaml:
+        dest: /etc/origin/master/master-config.yaml
+        yaml_key: kubernetesMasterConfig.apiServerArguments.cloud-config
+        yaml_value: "{{ ocp_postinstall_cloud_config  }}"
+
+    - name: Set apiServerArguments.cloud-provider to master config
+      modify_yaml:
+        dest: /etc/origin/master/master-config.yaml
+        yaml_key: kubernetesMasterConfig.apiServerArguments.cloud-provider
+        yaml_value: "{{ ocp_postinstall_cloud_provider  }}"
+
+    - name: Set apiServerArguments.cloud-provider to master config
+      modify_yaml:
+        dest: /etc/origin/master/master-config.yaml
+        yaml_key: kubernetesMasterConfig.controllerArguments
+        yaml_value: "{{ ocp_postinstall_controllerArguments  }}"
+
+    - name: Restart master instance
+      systemd:
+        name: "{{ item }}"
+        state: restarted
+      with_items: "{{ ['atomic-openshift-master'] if groups.masters | length == 1 else ['atomic-openshift-master-api', 'atomic-openshift-master-controllers'] }}"
+
+- hosts: nodes:!masters
+  tags:
+   - postinstall
+   - cloud-provider
+   - nodes
+
+  tasks:
+
+  - block:
+
+    - name: Set kubeletArguments.cloud-config to master config
+      modify_yaml:
+        dest: /etc/origin/node/node-config.yaml
+        yaml_key: kubeletArguments.cloud-config
+        yaml_value: "{{ ocp_postinstall_cloud_config }}"
+
+    - name: Set kubeletArguments.cloud-provider to master config
+      modify_yaml:
+        dest: /etc/origin/node/node-config.yaml
+        yaml_key: kubeletArguments.cloud-provider
+        yaml_value: "{{ ocp_postinstall_cloud_provider }}"
+
+    - name: Restart master instance
+      systemd:
+        name: atomic-openshift-node
+        state: restarted

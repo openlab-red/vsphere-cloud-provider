@@ -1,0 +1,10 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: "{{ vcenter_storage_class_name }}"
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "{{ vcenter_storage_class_default | default('false') }}"
+provisioner: kubernetes.io/vsphere-volume
+parameters:
+    diskformat: zeroedthick
+    datastore: "{{ vcenter_datastore }}"

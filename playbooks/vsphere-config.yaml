@@ -1,0 +1,8 @@
+- hosts: OSEv3
+  tags:
+   - preinstall
+   - vsphere
+
+  roles:
+   - role: vsphere-cloud-setup  
+

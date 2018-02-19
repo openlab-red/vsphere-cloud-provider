@@ -1,0 +1,7 @@
+- hosts: masters[0]
+  tags:
+   - postinstall
+   - storage-class
+  roles:
+    - role: vsphere-storage-class
+

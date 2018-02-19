@@ -1,0 +1,16 @@
+---
+- name: create /etc/origin/
+  file:
+    state: directory
+    path: "{{ vsphere_conf_dir }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create the vsphere.conf file
+  template:
+    src: "{{ role_path }}/templates/vsphere.conf.j2"
+    dest: "{{ vsphere_conf }}"
+    owner: root
+    group: root
+    mode: 0644

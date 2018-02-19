@@ -1,0 +1,45 @@
+############################################################################
+#### Role VCenter Configuration
+############################################################################
+
+vcenter_username: '\\'
+vcenter_password: '{{ vault_vcenter_password }}'
+vcenter_host: ''
+vcenter_datacenter: ''
+vcenter_datastore: ''
+vcenter_working_dir: ''
+vcenter_storage_class_name: ''
+vcenter_storage_class_default: ''
+
+cloud_provider_conf: "/etc/origin/vsphere.conf"
+cloud_provider_name: "vsphere"
+
+############################################################################
+#### OpenShift VCenter Configuration
+############################################################################
+#osm_controller_args:
+#  cloud-provider:
+#  - "vsphere"
+#  cloud-config:
+#  - "{{ cloud_provider_conf }}"
+#osm_api_server_args:
+#  cloud-provider:
+#  - "vsphere"
+#  cloud-config:
+#  - "{{ cloud_provider_conf }}"
+#openshift_node_kubelet_args:
+#  cloud-provider:
+#  - "vsphere"
+#  cloud-config:
+#  - "{{ cloud_provider_conf }}"
+
+ocp_postinstall_controllerArguments:
+ cloud-config:
+ - '{{ cloud_provider_conf }}'
+ cloud-provider:
+ - '{{ cloud_provider_name }}'
+
+ocp_postinstall_cloud_config:
+ - '{{ cloud_provider_conf }}'
+ocp_postinstall_cloud_provider:
+ - '{{ cloud_provider_name }}'
